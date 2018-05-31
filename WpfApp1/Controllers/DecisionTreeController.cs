@@ -32,10 +32,10 @@ namespace WpfApp1.Controllers
         {
             var q = samples.GroupBy(x => x.Last()).Select(y => y.Count());
 
-            if (q.Count() == 1)
+            if (q.Count() == 1)//last leaf
             {
                 decisionTreeModel.Attribute = samples[0].Last();
-                Console.WriteLine($"bulid result {samples[0].Last()}");
+                //Console.WriteLine($"bulid result {samples[0].Last()}");
                 return;
             }
 
@@ -56,7 +56,7 @@ namespace WpfApp1.Controllers
                 }
 
                 index++;
-            });
+            });//find max gain information
 
             decisionTreeModel.Attribute = attributesMax.ToString();
 
@@ -67,6 +67,18 @@ namespace WpfApp1.Controllers
             List<Predicate<string>> predicates = samplesGroupBy.Select(x =>
             {
                 Predicate<string> w2 = (string attribute) => attribute.Equals(x.Key);
+
+                //Predicate<string> w2 = (string attribute) => 
+                //{
+                //    double.TryParse(attribute, out double number);
+                //    if (number != 0)
+                //    {
+                //        double.TryParse(attribute, out double keyNumber);
+                //        return Math.Abs(number - keyNumber) <= 0.01d;
+                //    }
+
+                //    return attribute.Equals(x.Key);
+                //};
 
                 return w2;
             }).ToList();
@@ -91,6 +103,7 @@ namespace WpfApp1.Controllers
             decisionTreeModel.DecisionTreeModels = decisionTreeModels;
         }
 
+        //test multi sample
         public void TestDecisionTrees(DecisionTreeModel decisionTreeModel, params string[][] sample)
         {
             ResultTest.Clear();
@@ -98,13 +111,17 @@ namespace WpfApp1.Controllers
             sample.ToList().ForEach(x => TestDecisionTree(decisionTreeModel, x));
         }
 
+        //test single sample
         public void TestDecisionTree(DecisionTreeModel decisionTreeModel, string[] sample)
         {
+            Console.WriteLine($"1 Test {sample.Count()}");
+            Console.WriteLine($"2 Test {sample.Count()}");
+
             if (decisionTreeModel.DecisionTreeModels == null)
             {
-                //Console.WriteLine(decisionTreeModel.Attribute.Equals(sample.Last())
-                //    ? $"true {sample.Last()} -> {decisionTreeModel.Attribute}"
-                //    : $"false {sample.Last()} -> {decisionTreeModel.Attribute}");
+                Console.WriteLine(decisionTreeModel.Attribute.Equals(sample.Last())
+                    ? $"true {sample.Last()} -> {decisionTreeModel.Attribute}"
+                    : $"false {sample.Last()} -> {decisionTreeModel.Attribute}");
 
                 if (decisionTreeModel.Attribute.Equals(sample.Last()))
                 {
@@ -132,6 +149,69 @@ namespace WpfApp1.Controllers
                 }
 
                 index++;
+            });
+        }
+
+        public void ViewDecisionTree(DecisionTreeModel decisionTreeModel, List<List<string>> decisionTreeNodes, DecisionTreeModel fatherDecisionTreeModel, int deep)
+        {
+            //var queue = new Queue<DecisionTreeModel>();
+            //queue.Enqueue(decisionTreeModel);
+            ////var newdeep = 0;
+
+            //while (queue.Any())
+            //{
+            //    var CurrentDecisionTreeModel = queue.Dequeue();
+
+            //    var decisionTreeNode = CurrentDecisionTreeModel.DecisionTreeModels
+            //    .Select(x => x.Attribute)
+            //    .ToList();
+
+            //    if (decisionTreeNodes[deep] == null)
+            //    {
+            //        decisionTreeNodes[deep].Add(decisionTreeNode);
+            //    }
+
+            //    //decisionTreeNodes[deep] ?? new List<string>();//.Add(decisionTreeNode);
+            //}
+            //if (decisionTreeModel.DecisionTreeModels == null) return;
+
+
+
+            /*decisionTreeModel.DecisionTreeModels.ForEach(x =>
+            {
+                
+            });*/
+
+            //if (decisionTreeNodes[deep] == null)
+            //{
+            //    decisionTreeNodes[deep] = new List<string>();
+            //}
+            //decisionTreeNodes[deep] ?? decisionTreeNodes.Add(new List<string>());
+
+            /*try
+            {
+                var q = decisionTreeNodes[deep]?? decisionTreeNodes.Add(new List<string>());
+            }
+            catch (ArgumentOutOfRangeException argumentOutOfRangeException)
+            {
+                decisionTreeNodes.Add(new List<string>());
+            }*/
+
+            if (decisionTreeNodes.Count()<=deep)
+            {
+                decisionTreeNodes.Add(new List<string>());
+            }
+
+            decisionTreeNodes[deep].Add($"{deep}:{fatherDecisionTreeModel.Attribute}:{decisionTreeModel.Attribute}");
+
+            if (decisionTreeModel.DecisionTreeModels == null)
+            {
+                return;
+            }
+
+            decisionTreeModel.DecisionTreeModels.ForEach(x =>
+            {
+                ViewDecisionTree(x, decisionTreeNodes, decisionTreeModel, deep + 1);
             });
         }
     }

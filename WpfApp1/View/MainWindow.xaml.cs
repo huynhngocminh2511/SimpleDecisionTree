@@ -86,9 +86,18 @@ namespace WpfApp1.View
             });*/
         }
 
-        private void SelectAttributesSpecial_Click(object sender, RoutedEventArgs e)
+        private void SelectAttributes_Click(object sender, RoutedEventArgs e)
         {
             //SelectAttributesEventHandler.Invoke(sender, e);
+            ListBoxLog.Items.Add("Select Attributes Starting");
+            Task.Run(() =>
+            {
+                Dispatcher.Invoke(() => 
+                {
+                    dataController.ReduceAttribute(int.Parse(PercentDataTraining.Text));
+                    ListBoxLog.Items.Add("Select Attributes Finished");
+                });
+            });
         }
 
         private void BuildDecisionTree_Click(object sender, RoutedEventArgs e)
@@ -103,7 +112,7 @@ namespace WpfApp1.View
                 Console.WriteLine("build 1");
                 decisionTreeController.BuildDecisionTree(DecisionTreeController.DecisionTreeModel, dataController.Samples);
                 Console.WriteLine("build 2");
-                Dispatcher.Invoke(new Action(() =>
+                Dispatcher.Invoke(() =>
                 {
                     var dateTimeEnd = DateTime.Now;
 
@@ -112,7 +121,7 @@ namespace WpfApp1.View
 
                     ListBoxLog.SelectedIndex = ListBoxLog.Items.Count - 1;
                     ListBoxLog.ScrollIntoView(ListBoxLog.SelectedItem);
-                }));
+                });
                 
             });
 
@@ -123,7 +132,18 @@ namespace WpfApp1.View
 
         private void ViewDecisionTree_Click(object sender, RoutedEventArgs e)
         {
-            //ViewDecisionTreeEventHandler.Invoke(sender, e);
+            var decisionTreeNodes = new List<List<string>>();
+            //{
+            //    new List<string>() { DecisionTreeController.DecisionTreeModel.Attribute }
+            //};
+
+            decisionTreeController.ViewDecisionTree(DecisionTreeController.DecisionTreeModel, decisionTreeNodes, DecisionTreeController.DecisionTreeModel, 0);
+
+            decisionTreeNodes.ForEach(x =>
+            {
+                var decisionTreeNodeRow = x.Aggregate((y, z) => y + " " + z);
+                ListBoxLog.Items.Add(decisionTreeNodeRow);
+            });
         }
 
         private void TestDecisionTree_Click(object sender, RoutedEventArgs e)
@@ -137,7 +157,7 @@ namespace WpfApp1.View
             {
                 decisionTreeController.TestDecisionTrees(DecisionTreeController.DecisionTreeModel, testSampels);
                 
-                Dispatcher.Invoke(new Action(() =>
+                Dispatcher.Invoke(() =>
                 {
                     decisionTreeController
                         .ResultTest
@@ -190,7 +210,7 @@ namespace WpfApp1.View
 
                     ListBoxLog.SelectedIndex = ListBoxLog.Items.Count- 1;
                     ListBoxLog.ScrollIntoView(ListBoxLog.SelectedItem);
-                }));
+                });
             });
 
             //var program = new Program();

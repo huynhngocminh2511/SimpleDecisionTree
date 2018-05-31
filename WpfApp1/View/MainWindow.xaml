@@ -9,7 +9,7 @@
     <Grid>
         <Button Content="Choose File" HorizontalAlignment="Left" Margin="98,65,0,0" VerticalAlignment="Top" Width="75" Click="ChooseFile_Click"/>
         <Button Content="Load Data" HorizontalAlignment="Left" Margin="388,142,0,0" VerticalAlignment="Top" Width="75" Click="LoadData_Click"/>
-        <Button Content="Select Attributes Special" HorizontalAlignment="Left" Margin="98,230,0,0" VerticalAlignment="Top" Width="75" Click="SelectAttributesSpecial_Click"/>
+        <Button Content="Select Attributes" HorizontalAlignment="Left" Margin="51,240,0,0" VerticalAlignment="Top" Width="100" Click="SelectAttributes_Click"/>
         <Button Content="Build Dicision Tree" HorizontalAlignment="Left" Margin="334,240,0,0" VerticalAlignment="Top" Width="75" Click="BuildDecisionTree_Click"/>
         <Button Content="View Dicision Tree" HorizontalAlignment="Left" Margin="207,235,0,0" VerticalAlignment="Top" Width="75" Click="ViewDecisionTree_Click"/>
         <Button Content="Test Dicision Tree" HorizontalAlignment="Left" Margin="470,240,0,0" VerticalAlignment="Top" Width="75" Click="TestDecisionTree_Click"/>
